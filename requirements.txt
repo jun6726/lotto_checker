@@ -1,0 +1,33 @@
+Flask==3.0.0
+gunicorn==21.2.0
+Werkzeug==3.0.1
+```
+
+**2) `Procfile` 파일 생성 (확장자 없음!)**
+
+프로젝트 폴더에 `Procfile` 파일을 만들고:
+```
+web: gunicorn app:app
+```
+
+**3) `.gitignore` 파일 생성**
+```
+__pycache__/
+*.pyc
+venv/
+.DS_Store
+```
+
+**4) 파일명 확인**
+- `app.py` (만약 `generate_csv.py`라면 `app.py`로 이름 변경)
+
+**최종 파일 구조:**
+```
+lotto_checker/
+├── app.py              ← 메인 파일
+├── requirements.txt    ← 새로 만든 파일
+├── Procfile           ← 새로 만든 파일
+├── .gitignore         ← 새로 만든 파일
+├── lotto_numbers.csv
+└── templates/
+    └── index.html

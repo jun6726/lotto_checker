@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>로또 자동 체크</title>
+    <style>
+        body { max-width: 800px; margin: 40px auto; font-family: sans-serif; padding: 0 20px; }
+        h1 { color: #333; }
+        input { width: 100%; padding: 12px; font-size: 18px; box-sizing: border-box; border: 2px solid #ddd; border-radius: 5px; }
+        button { padding: 12px 24px; font-size: 16px; margin-top: 10px; cursor: pointer; background: #4CAF50; color: white; border: none; border-radius: 5px; }
+        button:hover { background: #45a049; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+        th { background: #4CAF50; color: white; font-weight: bold; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        tr:hover { background: #f1f1f1; }
+        h2 { margin-top: 40px; color: #333; }
+        .user-numbers { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .no-results { margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 5px; border-left: 4px solid #ffc107; }
+        .rank-1 { background: #ffd700 !important; font-weight: bold; }
+        .rank-2 { background: #c0c0c0 !important; font-weight: bold; }
+        .rank-3 { background: #cd7f32 !important; font-weight: bold; }
+        .rank-4 { background: #e8f5e9 !important; }
+        .rank-5 { background: #f3e5f5 !important; }
+        .recommended-section { margin-top: 40px; padding: 20px; background: #fff9c4; border-radius: 10px; border: 2px solid #fbc02d; }
+        .recommended-numbers { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .number-ball { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(145deg, #4CAF50, #45a049); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .number-ball .number { font-size: 24px; }
+        .number-ball .count { font-size: 11px; opacity: 0.9; }
+        .tabs { display: flex; gap: 10px; margin-top: 30px; border-bottom: 2px solid #ddd; }
+        .tab { padding: 12px 24px; cursor: pointer; background: #f5f5f5; border: none; border-radius: 5px 5px 0 0; font-size: 16px; transition: all 0.3s; }
+        .tab:hover { background: #e0e0e0; }
+        .tab.active { background: #4CAF50; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .recent-form { margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 5px; }
+        .recent-form label { font-weight: bold; margin-right: 10px; }
+        .recent-form select { padding: 8px; font-size: 14px; border: 2px solid #ddd; border-radius: 5px; }
+        .recent-form button { padding: 8px 16px; margin-left: 10px; background: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .recent-form button:hover { background: #1976D2; }
+        .number-ball.recent { background: linear-gradient(145deg, #2196F3, #1976D2); }
+    </style>
+</head>
+<body>
+
+<h1>🎱 로또 자동 체크</h1>
+<p>당신의 번호 6개를 입력하세요 (예: 1 3 12 22 33 44)</p>
+
+<form method="POST">
+    <input name="numbers" required placeholder="숫자 6개 입력 (공백 또는 쉼표로 구분)" />
+    <button type="submit">🔍 조회하기</button>
+</form>
+
+{% if nums %}
+    <div class="user-numbers">
+        <h3>입력한 번호: {{ nums }}</h3>
+    </div>
+{% endif %}
+
+{% if results %}
+    <h2>📊 일치한 회차 (총 {{ results|length }}회)</h2>
+    <table>
+        <tr>
+            <th>회차</th>
+            <th>일치 번호</th>
+            <th>보너스</th>
+            <th>일치 개수</th>
+            <th>등수</th>
+        </tr>
+        {% for r in results %}
+        <tr class="rank-{{ r.rank[0] if r.rank != '-' else '' }}">
+            <td><strong>{{ r.round }}회</strong></td>
+            <td>{{ r.matched }}</td>
+            <td>{{ r.bonus }}</td>
+            <td><strong>{{ r.count }}개</strong></td>
+            <td><strong>{{ r.rank }}</strong></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% elif nums %}
+    <div class="no-results">
+        <p>😢 3개 이상 일치하는 회차가 없습니다.</p>
+    </div>
+{% endif %}
+
+{% if recommended %}
+    <div class="tabs">
+        <button class="tab active" onclick="openTab(event, 'all-time')">📊 역대 전체</button>
+        <button class="tab" onclick="openTab(event, 'recent')">🔥 최근 회차</button>
+    </div>
+
+    <div id="all-time" class="tab-content active">
+        <div class="recommended-section">
+            <h2>💡 추천 번호 (역대 당첨 빈도 Top 10)</h2>
+            <p>가장 많이 당첨된 번호들입니다</p>
+            <div class="recommended-numbers">
+                {% for num, count in recommended %}
+                <div class="number-ball">
+                    <span class="number">{{ num }}</span>
+                    <span class="count">{{ count }}회</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div id="recent" class="tab-content">
+        <div class="recommended-section" style="background: #e3f2fd; border-color: #2196F3;">
+            <h2>🔥 최근 회차 빈도 분석</h2>
+            <div class="recent-form">
+                <form method="POST" id="recentForm">
+                    <input type="hidden" name="numbers" value="">
+                    <input type="hidden" name="active_tab" value="recent">
+                    <label>분석할 최근 회차:</label>
+                    <select name="recent_count" id="recent_count">
+                        <option value="10" {% if recent_count == 10 %}selected{% endif %}>최근 10회</option>
+                        <option value="20" {% if recent_count == 20 %}selected{% endif %}>최근 20회</option>
+                        <option value="30" {% if recent_count == 30 %}selected{% endif %}>최근 30회</option>
+                        <option value="50" {% if recent_count == 50 %}selected{% endif %}>최근 50회</option>
+                        <option value="100" {% if recent_count == 100 %}selected{% endif %}>최근 100회</option>
+                    </select>
+                    <button type="submit">분석하기</button>
+                </form>
+            </div>
+            
+            {% if recent %}
+            <p>최근 <strong>{{ recent_count }}회</strong>에서 가장 많이 나온 번호</p>
+            <div class="recommended-numbers">
+                {% for num, count in recent %}
+                <div class="number-ball recent">
+                    <span class="number">{{ num }}</span>
+                    <span class="count">{{ count }}회</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>회차를 선택하고 분석하기 버튼을 눌러주세요.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+<script>
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+    }
+    
+    tablinks = document.getElementsByClassName("tab");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    
+    document.getElementById(tabName).className += " active";
+    evt.currentTarget.className += " active";
+}
+
+// 페이지 로드 시 최근 회차 분석 결과가 있으면 해당 탭으로 이동
+window.onload = function() {
+    {% if recent %}
+    // 최근 회차 분석 결과가 있으면 해당 탭 활성화
+    var allTimeTabs = document.getElementsByClassName("tab-content");
+    var tabs = document.getElementsByClassName("tab");
+    
+    for (var i = 0; i < allTimeTabs.length; i++) {
+        allTimeTabs[i].className = allTimeTabs[i].className.replace(" active", "");
+    }
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].className = tabs[i].className.replace(" active", "");
+    }
+    
+    document.getElementById("recent").className += " active";
+    tabs[1].className += " active";
+    {% endif %}
+};
+</script>
+
+</body>
+</html>
