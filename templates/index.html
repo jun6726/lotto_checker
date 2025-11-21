@@ -112,14 +112,13 @@
                     <input type="hidden" name="numbers" value="">
                     <input type="hidden" name="active_tab" value="recent">
                     <label>분석할 최근 회차:</label>
-                    <select name="recent_count" id="recent_count">
+                    <select name="recent_count" id="recent_count" onchange="this.form.submit()">
                         <option value="10" {% if recent_count == 10 %}selected{% endif %}>최근 10회</option>
                         <option value="20" {% if recent_count == 20 %}selected{% endif %}>최근 20회</option>
                         <option value="30" {% if recent_count == 30 %}selected{% endif %}>최근 30회</option>
                         <option value="50" {% if recent_count == 50 %}selected{% endif %}>최근 50회</option>
                         <option value="100" {% if recent_count == 100 %}selected{% endif %}>최근 100회</option>
                     </select>
-                    <button type="submit">분석하기</button>
                 </form>
             </div>
             

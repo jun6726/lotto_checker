@@ -54,6 +54,10 @@ def index():
     # 항상 추천 번호 계산 (GET, POST 모두)
     rows = load_lotto()
     recommended_numbers = get_most_frequent_numbers(rows, top_n=10)
+    
+    # GET 요청일 때도 기본 최근 회차 계산
+    if request.method == "GET":
+        recent_numbers = get_most_frequent_numbers(rows, top_n=10, recent_count=recent_count)
 
     if request.method == "POST":
         user_input = request.form.get("numbers", "")
