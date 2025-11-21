@@ -8,39 +8,89 @@
 <body>
 
 <h1>🎱 로또 자동 체크</h1>
+
+<div style="margin-bottom: 20px; padding: 10px; background-color: #f8f9fa; border-radius: 5px;">
+    <form action="{{ url_for('update_data') }}" method="post" style="display: inline;">
+        <button type="submit" style="background-color: #28a745;">최신회차 업데이트</button>
+    </form>
+    {% if latest_round %}
+        <p style="margin-top: 10px; color: #666;">
+            현재 최신 회차: <strong>{{ latest_round.round }}회</strong> ({{ latest_round.date }})
+        </p>
+    {% endif %}
+</div>
+
 <p>당신의 번호 6개를 입력하세요 (예: 1 3 12 22 33 44)</p>
 
 <form method="POST">
-    <input name="numbers" required placeholder="숫자 6개 입력 (공백 또는 쉼표로 구분)" />
-    <button type="submit">🔍 조회하기</button>
+  <input type="hidden" name="history_count" value="{{ history_count }}">
+  <textarea name="numbers" rows="6" required placeholder="한 줄에 하나씩">{{ user_input }}</textarea>
+  <button type="submit">조회하기</button>
 </form>
+
+<div style="margin-top: 20px; padding: 10px; background-color: #f8f9fa; border-radius: 5px;">
+    <form method="get" action="/" style="margin-bottom: 10px;">
+        <label for="history_count">최근 당첨 내역:</label>
+        <select name="history_count" id="history_count" onchange="this.form.submit()">
+            <option value="5" {% if history_count == 5 %}selected{% endif %}>5회</option>
+            <option value="10" {% if history_count == 10 %}selected{% endif %}>10회</option>
+            <option value="15" {% if history_count == 15 %}selected{% endif %}>15회</option>
+            <option value="20" {% if history_count == 20 %}selected{% endif %}>20회</option>
+        </select>
+    </form>
+    
+    {% if recent_history %}
+    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9em;">
+        {% for row in recent_history %}
+        <li style="margin-bottom: 5px; padding: 5px; background: #fff; border-radius: 4px; border: 1px solid #eee;">
+            <strong>{{ row.round }}회</strong> ({{ row.dates }}): 
+            <span style="color: #007bff; font-weight: bold;">{{ row.n1 }}, {{ row.n2 }}, {{ row.n3 }}, {{ row.n4 }}, {{ row.n5 }}, {{ row.n6 }}</span>
+            + <span style="color: #dc3545; font-weight: bold;">{{ row.bonus }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+{% if error_message %}
+<div style="color: red; margin: 10px 0; padding: 10px; background-color: #ffe6e6; border-radius: 5px;">
+    ⚠️ {{ error_message }}
+</div>
+{% endif %}
 
 {% if nums %}
     <div class="user-numbers">
-        <h3>입력한 번호: {{ nums }}</h3>
+        <h3>입력한 번호:</h3>
+        {% for line in nums %}
+            <div>{{ line }}</div>
+        {% endfor %}
     </div>
 {% endif %}
 
 {% if results %}
-    <h2>📊 일치한 회차 (총 {{ results|length }}회)</h2>
-    <table>
-        <tr>
-            <th>회차</th>
-            <th>일치 번호</th>
-            <th>보너스</th>
-            <th>일치 개수</th>
-            <th>등수</th>
-        </tr>
-        {% for r in results %}
-        <tr class="rank-{{ r.rank[0] if r.rank != '-' else '' }}">
-            <td><strong>{{ r.round }}회</strong></td>
-            <td>{{ r.matched }}</td>
-            <td>{{ r.bonus }}</td>
-            <td><strong>{{ r.count }}개</strong></td>
-            <td><strong>{{ r.rank }}</strong></td>
-        </tr>
-        {% endfor %}
-    </table>
+    <h2>📊 일치한 회차</h2>
+    
+    {% for line_result in results %}
+    <div style="margin-bottom: 30px; border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+        <h3 style="margin-top: 0;">#{{ line_result.line_index }}번째 줄: {{ line_result.numbers }} (총 {{ line_result.matches|length }}회)</h3>
+        <table>
+            <tr>
+                <th>회차</th>
+                <th>일치 번호</th>
+                <th>일치 개수</th>
+                <th>등수</th>
+            </tr>
+            {% for r in line_result.matches %}
+            <tr class="rank-{{ r.rank[0] if r.rank != '-' else '' }}">
+                <td><strong>{{ r.round }}회</strong></td>
+                <td>{{ r.matched }}</td>
+                <td><strong>{{ r.count }}개</strong></td>
+                <td><strong>{{ r.rank }}</strong></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endfor %}
 {% elif nums %}
     <div class="no-results">
         <p>😢 3개 이상 일치하는 회차가 없습니다.</p>

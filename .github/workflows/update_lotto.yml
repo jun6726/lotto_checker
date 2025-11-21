@@ -1,0 +1,33 @@
+name: Update Lotto Numbers
+
+on:
+  schedule:
+    # KST 목요일 21:00 -> UTC 목요일 12:00
+    - cron: '0 12 * * 4'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+        
+    - name: Run update script
+      run: python update_lotto.py
+      
+    - name: Commit and push if changed
+      run: |
+        git config --global user.name 'GitHub Action'
+        git config --global user.email 'action@github.com'
+        git add lotto_numbers.csv
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update lotto numbers" && git push)
