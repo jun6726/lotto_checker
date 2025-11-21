@@ -2,8 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for, make_respo
 import csv
 from collections import Counter
 import update_lotto
+import json
+import os
+from datetime import datetime
 
 app = Flask(__name__)
+
+VISITORS_FILE = "visitors.json"
 
 def load_lotto():
     with open("lotto_numbers.csv", "r", encoding="utf-8") as f:
@@ -44,6 +49,30 @@ def get_rank(matched_count, bonus_matched):
     else:
         return "-"
 
+def update_visitor_count():
+    today = datetime.now().strftime("%Y-%m-%d")
+    data = {"total": 0, "daily": 0, "date": today}
+    
+    if os.path.exists(VISITORS_FILE):
+        try:
+            with open(VISITORS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except:
+            pass
+    
+    # 날짜가 바뀌었으면 일일 방문자 초기화
+    if data.get("date") != today:
+        data["daily"] = 0
+        data["date"] = today
+    
+    data["total"] += 1
+    data["daily"] += 1
+    
+    with open(VISITORS_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f)
+        
+    return data
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     results = []
@@ -54,6 +83,9 @@ def index():
     latest_round_info = None
     error_message = None
     user_input = ""
+    
+    # 방문자 수 집계
+    visitor_info = update_visitor_count()
     
     # 항상 추천 번호 계산 (GET, POST 모두)
     rows = load_lotto()
@@ -160,6 +192,7 @@ def index():
                          latest_round=latest_round_info,
                          error_message=error_message,
                          user_input=user_input,
+                         visitor_info=visitor_info,
                          recent_history=recent_history,
                          history_count=history_count))
     

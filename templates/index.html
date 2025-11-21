@@ -7,7 +7,16 @@
 </head>
 <body>
 
-<h1>🎱 로또 자동 체크</h1>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: relative;">
+    <h1 style="margin: 0;">🎱 로또 자동 체크</h1>
+    <div style="font-weight: bold; font-size: 1.5em; color: rgba(0,0,0,0.8); position: absolute; left: 50%; transform: translateX(-50%);">Woody</div>
+    {% if visitor_info %}
+    <div style="font-size: 0.8em; color: #666; text-align: right;">
+        <div>오늘: <strong>{{ visitor_info.daily }}</strong></div>
+        <div>전체: <strong>{{ visitor_info.total }}</strong></div>
+    </div>
+    {% endif %}
+</div>
 
 <div style="margin-bottom: 20px; padding: 10px; background-color: #f8f9fa; border-radius: 5px;">
     <form action="{{ url_for('update_data') }}" method="post" style="display: inline;">
@@ -24,7 +33,7 @@
 
 <form method="POST">
   <input type="hidden" name="history_count" value="{{ history_count }}">
-  <textarea name="numbers" rows="6" required placeholder="한 줄에 하나씩">{{ user_input }}</textarea>
+  <textarea name="numbers" rows="6" required placeholder="한 게임 당 한 줄씩">{{ user_input }}</textarea>
   <button type="submit">조회하기</button>
 </form>
 
