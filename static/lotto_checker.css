@@ -1,0 +1,292 @@
+* { 
+    box-sizing: border-box; 
+}
+
+body { 
+    max-width: 800px; 
+    margin: 0 auto; 
+    font-family: sans-serif; 
+    padding: 20px; 
+}
+
+h1 { 
+    color: #333; 
+    font-size: 24px; 
+}
+
+h2 { 
+    margin-top: 40px; 
+    color: #333; 
+    font-size: 20px; 
+}
+
+input { 
+    width: 100%; 
+    padding: 12px; 
+    font-size: 16px; 
+    border: 2px solid #ddd; 
+    border-radius: 5px; 
+}
+
+button { 
+    padding: 12px 24px; 
+    font-size: 16px; 
+    margin-top: 10px; 
+    cursor: pointer; 
+    background: #4CAF50; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    width: 100%; 
+}
+
+button:hover { 
+    background: #45a049; 
+}
+
+table { 
+    width: 100%; 
+    margin-top: 20px; 
+    border-collapse: collapse; 
+    font-size: 14px; 
+}
+
+th, td { 
+    border: 1px solid #ddd; 
+    padding: 8px; 
+    text-align: center; 
+    word-break: break-word; 
+}
+
+th { 
+    background: #4CAF50; 
+    color: white; 
+    font-weight: bold; 
+}
+
+tr:nth-child(even) { 
+    background: #f9f9f9; 
+}
+
+tr:hover { 
+    background: #f1f1f1; 
+}
+
+.user-numbers { 
+    background: #e3f2fd; 
+    padding: 15px; 
+    border-radius: 5px; 
+    margin: 20px 0; 
+}
+
+.no-results { 
+    margin-top: 20px; 
+    padding: 15px; 
+    background: #fff3cd; 
+    border-radius: 5px; 
+    border-left: 4px solid #ffc107; 
+}
+
+.rank-1 { 
+    background: #ffd700 !important; 
+    font-weight: bold; 
+}
+
+.rank-2 { 
+    background: #c0c0c0 !important; 
+    font-weight: bold; 
+}
+
+.rank-3 { 
+    background: #cd7f32 !important; 
+    font-weight: bold; 
+}
+
+.rank-4 { 
+    background: #e8f5e9 !important; 
+}
+
+.rank-5 { 
+    background: #f3e5f5 !important; 
+}
+
+.recommended-section { 
+    margin-top: 40px; 
+    padding: 20px; 
+    background: #fff9c4; 
+    border-radius: 10px; 
+    border: 2px solid #fbc02d; 
+}
+
+.recommended-numbers { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    margin-top: 15px; 
+    justify-content: center; 
+}
+
+.number-ball { 
+    width: 60px; 
+    height: 60px; 
+    border-radius: 50%; 
+    background: linear-gradient(145deg, #4CAF50, #45a049); 
+    color: white; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    font-weight: bold; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+}
+
+.number-ball .number { 
+    font-size: 24px; 
+}
+
+.number-ball .count { 
+    font-size: 11px; 
+    opacity: 0.9; 
+}
+
+.number-ball.recent { 
+    background: linear-gradient(145deg, #2196F3, #1976D2); 
+}
+
+.tabs { 
+    display: flex; 
+    gap: 10px; 
+    margin-top: 30px; 
+    border-bottom: 2px solid #ddd; 
+    flex-wrap: wrap; 
+}
+
+.tab { 
+    padding: 12px 20px; 
+    cursor: pointer; 
+    background: #f5f5f5; 
+    border: none; 
+    border-radius: 5px 5px 0 0; 
+    font-size: 14px; 
+    transition: all 0.3s; 
+    flex: 1; 
+    min-width: 120px; 
+}
+
+.tab:hover { 
+    background: #e0e0e0; 
+}
+
+.tab.active { 
+    background: #4CAF50; 
+    color: white; 
+}
+
+.tab-content { 
+    display: none; 
+}
+
+.tab-content.active { 
+    display: block; 
+}
+
+.recent-form { 
+    margin: 20px 0; 
+    padding: 15px; 
+    background: #f9f9f9; 
+    border-radius: 5px; 
+}
+
+.recent-form label { 
+    font-weight: bold; 
+    margin-right: 10px; 
+    display: block; 
+    margin-bottom: 10px; 
+}
+
+.recent-form select { 
+    padding: 10px; 
+    font-size: 14px; 
+    border: 2px solid #ddd; 
+    border-radius: 5px; 
+    width: 100%; 
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+    body { 
+        padding: 10px; 
+    }
+    
+    h1 { 
+        font-size: 20px; 
+    }
+    
+    h2 { 
+        font-size: 18px; 
+    }
+    
+    table { 
+        font-size: 12px; 
+    }
+    
+    th, td { 
+        padding: 6px 4px; 
+    }
+    
+    .number-ball { 
+        width: 50px; 
+        height: 50px; 
+    }
+    
+    .number-ball .number { 
+        font-size: 20px; 
+    }
+    
+    .number-ball .count { 
+        font-size: 10px; 
+    }
+    
+    .tab { 
+        padding: 10px 12px; 
+        font-size: 13px; 
+        min-width: 100px; 
+    }
+    
+    .recommended-section { 
+        padding: 15px; 
+    }
+    
+    input, button { 
+        font-size: 16px; 
+    } /* iOS 줌 방지 */
+}
+
+@media (max-width: 480px) {
+    h1 { 
+        font-size: 18px; 
+    }
+    
+    table { 
+        font-size: 11px; 
+    }
+    
+    th, td { 
+        padding: 5px 2px; 
+    }
+    
+    .number-ball { 
+        width: 45px; 
+        height: 45px; 
+        gap: 8px; 
+    }
+    
+    .number-ball .number { 
+        font-size: 18px; 
+    }
+    
+    .tab { 
+        padding: 8px 10px; 
+        font-size: 12px; 
+    }
+}
