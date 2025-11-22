@@ -2,8 +2,7 @@ name: Update Lotto Numbers
 
 on:
   schedule:
-    # KST 목요일 21:00 -> UTC 목요일 12:00
-    - cron: '0 12 * * 4'
+     - cron: "50 11 * * SAT"
   workflow_dispatch:
 
 jobs:
