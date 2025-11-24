@@ -3,11 +3,29 @@ import csv
 import os
 import pandas as pd
 import re
+import subprocess
 
 CSV_FILE = "lotto_numbers.csv"
 # 엑셀 다운로드 URL (실제로는 HTML 테이블 형식)
 DOWNLOAD_URL = "https://www.dhlottery.co.kr/gameResult.do?method=allWinExel&gubun=byWin&nowPage=&drwNoStart={}&drwNoEnd={}"
 LATEST_ROUND_URL = "https://www.dhlottery.co.kr/gameResult.do?method=byWin"
+
+def push_to_github():
+    try:
+        print("Attempting to push to GitHub...")
+        subprocess.run(["git", "add", CSV_FILE], check=True)
+        
+        # 변경사항 확인
+        result = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+        if not result.stdout.strip():
+            print("No changes to commit.")
+            return
+
+        subprocess.run(["git", "commit", "-m", "Update lotto numbers (Auto)"], check=True)
+        subprocess.run(["git", "push"], check=True)
+        print("Successfully pushed to GitHub.")
+    except Exception as e:
+        print(f"Git push failed: {e}")
 
 def get_last_saved_round():
     if not os.path.exists(CSV_FILE):
@@ -158,6 +176,9 @@ def update_lotto():
                 writer.writerows(all_rows)
                 
             print(f"Successfully updated {len(final_new_rows)} rounds.")
+            
+            # GitHub에 업로드
+            push_to_github()
         else:
             print("No valid data found in the downloaded file.")
 
