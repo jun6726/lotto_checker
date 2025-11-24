@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, make_response
 import csv
 from collections import Counter
-import update_lotto
 import json
 import os
 from datetime import datetime
+import sys
+import subprocess
 
 app = Flask(__name__)
 
@@ -206,7 +207,12 @@ def index():
 
 @app.route("/update", methods=["POST"])
 def update_data():
-    update_lotto.update_lotto()
+    try:
+        # 별도 프로세스로 스크립트 실행하여 업데이트 수행
+        subprocess.run([sys.executable, "update_lotto.py"], check=True)
+    except Exception as e:
+        print(f"Error running update script: {e}")
+        
     return redirect(url_for('index'))
 
 if __name__ == "__main__":
