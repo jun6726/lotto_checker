@@ -5,25 +5,31 @@ on:
      - cron: "50 11 * * SAT"
   workflow_dispatch:
 
+permissions:
+  contents: write   # ✅ push 권한 필수
+
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
-    
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}   # ✅ push용 토큰 명시
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
-        
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        
+
     - name: Run update script
       run: python update_lotto.py
-      
+
     - name: Commit and push if changed
       run: |
         git config --global user.name 'GitHub Action'
