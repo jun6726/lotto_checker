@@ -1,0 +1,31 @@
+From e0a9ace02616029e7a9a8527310baff4bd4158c4 Mon Sep 17 00:00:00 2001
+From: GitHub Action <action@github.com>
+Date: Sun, 7 Dec 2025 23:13:39 +0000
+Subject: [PATCH] Update lotto numbers
+
+---
+ lotto_numbers.csv | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lotto_numbers.csv b/lotto_numbers.csv
+index 0b9e095..b5b708b 100644
+--- a/lotto_numbers.csv
++++ b/lotto_numbers.csv
+@@ -1,4 +1,7 @@
+ round,n1,n2,n3,n4,n5,n6,bonus,dates
++1201,7,9,24,27,35,36,37,2025.12.06
++1200,1,2,4,16,20,32,45,2025.11.29
++1199,16,24,25,30,31,32,7,2025.11.22
+ 1198,26,30,33,38,39,41,21,2025.11.15
+ 1197,1,5,7,26,28,43,30,2025.11.08
+ 1196,8,12,15,29,40,45,14,2025.11.01
+@@ -1196,4 +1199,4 @@ round,n1,n2,n3,n4,n5,n6,bonus,dates
+ 4,14,27,30,31,40,42,2,2002.12.28
+ 3,11,16,19,21,27,31,30,2002.12.21
+ 2,9,13,21,25,32,42,2,2002.12.14
+-1,10,23,29,33,37,40,16,2002.12.07
+\ No newline at end of file
++1,10,23,29,33,37,40,16,2002.12.07
+-- 
+2.41.0
+
